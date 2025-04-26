@@ -1,0 +1,10 @@
+{
+  // Enable Nx Console UI features
+  "nxConsole.enableProjectGraph": true,
+  "nxConsole.showNodeModuleProjects": true,
+  "nxConsole.enableTaskDetection": true,
+  // Customize task detection for Nx
+  "tasks.experimental.detectAutoTasks": "on",
+  // Optional: Set default Nx workspace path if needed
+  // "nxConsole.workspacePath": "${workspaceFolder}"
+}
