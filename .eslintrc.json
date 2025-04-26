@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true
+  },
+  "ignorePatterns": ["dist/", "build/", "node_modules/"],
+  "rules": {
+    // Add or override rules here
+  }
+}

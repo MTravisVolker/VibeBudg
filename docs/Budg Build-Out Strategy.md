@@ -7,30 +7,43 @@ This document outlines a comprehensive, phased approach to building the Budg web
 ## Phase 1: Project Foundation & Planning
 
 1. **Requirements Review**
-   - [ ] Review the PRD with all stakeholders.
+   - [X] Review the PRD with all stakeholders.
      > **ChatGPT Prompt:** Summarize the main requirements and user stories from the Budg PRD. Identify any ambiguities or open questions for stakeholder review.
-   - [ ] Clarify open questions and finalize scope for MVP.
+   - [X] Clarify open questions and finalize scope for MVP.
      > **ChatGPT Prompt:** List all open questions and unclear requirements from the PRD. Propose a clear, prioritized MVP scope based on the PRD.
 
 2. **Tech Stack Selection**
-   - [ ] **Frontend:** React.js (with TypeScript), modern UI library (e.g., Material-UI or Ant Design).
+   - **Frontend:** React.js (with TypeScript), modern UI library (e.g., Material-UI or Ant Design).
      > **ChatGPT Prompt:** Recommend the best React UI library for a modern, accessible, and responsive budgeting app. Justify your choice and outline initial setup steps.
-   - [ ] **Backend:** Node.js (Express) or Python (Django/FastAPI).
+   - **Backend:** Node.js (Express) or Python (Django/FastAPI).
      > **ChatGPT Prompt:** Compare Node.js (Express) and Python (Django/FastAPI) for a secure, scalable budgeting app backend. Recommend one and explain why.
-   - [ ] **Database:** PostgreSQL (preferred for relational data).
+   - **Database:** PostgreSQL (preferred for relational data).
      > **ChatGPT Prompt:** Design a PostgreSQL schema for a budgeting app with users, accounts, bills, categories, statuses, recurrences, and audit logs.
-   - [ ] **Authentication:** JWT-based authentication, with support for MFA.
+   - **Authentication:** JWT-based authentication, with support for MFA.
      > **ChatGPT Prompt:** Describe how to implement JWT authentication with optional multi-factor authentication in a web app backend.
-   - [ ] **Testing:** Jest (unit), Cypress or Playwright (e2e).
+   - **Testing:** Jest (unit), Cypress or Playwright (e2e).
      > **ChatGPT Prompt:** Outline a testing strategy using Jest for unit tests and Cypress/Playwright for end-to-end tests in a React/Node.js project.
-   - [ ] **DevOps:** Docker, GitHub Actions for CI/CD.
+   - **DevOps:** Docker, GitHub Actions for CI/CD.
      > **ChatGPT Prompt:** Provide a Dockerfile and a GitHub Actions workflow for building, testing, and deploying a full-stack web app.
 
 3. **Project Setup**
-   - [ ] Initialize monorepo or separate frontend/backend repos.
+   - [X] Initialize monorepo.
      > **ChatGPT Prompt:** Explain the pros and cons of a monorepo vs. separate repos for a full-stack budgeting app. Provide setup steps for your recommended approach.
-   - [ ] Set up code formatting, linting, and pre-commit hooks.
+   - [X] Set up code formatting, linting, and pre-commit hooks.
      > **ChatGPT Prompt:** List the best tools for code formatting, linting, and pre-commit hooks in a TypeScript/Node.js project. Show how to configure them.
+     > **Summary:**  
+     > - **Formatter:** [Prettier](https://prettier.io/)  
+     > - **Linter:** [ESLint](https://eslint.org/) (with TypeScript plugin)  
+     > - **Pre-commit hooks:** [Husky](https://typicode.github.io/husky/)  
+     > - **Lint-staged:** [lint-staged](https://github.com/okonet/lint-staged) to run linters/formatters only on staged files  
+     > **Setup Steps:**  
+     > 1. Install dependencies:  
+     >    `npm install --save-dev prettier eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin husky lint-staged`  
+     > 2. Configure `.prettierrc`, `.eslintrc`, and `lint-staged` in `package.json` or separate config files.  
+     > 3. Initialize Husky: `npx husky install`  
+     > 4. Add pre-commit hook: `npx husky add .husky/pre-commit "npx lint-staged"`  
+     > 5. Add scripts to `package.json` for linting and formatting.  
+     > 6. (Optional) Add `prettier` and `eslint` VSCode extensions for editor integration.
    - [ ] Configure environments (dev, staging, prod).
      > **ChatGPT Prompt:** Describe how to set up environment configuration for dev, staging, and production in a full-stack web app.
 
@@ -275,4 +288,3 @@ This document outlines a comprehensive, phased approach to building the Budg web
 ---
 
 This strategy ensures a structured, maintainable, and scalable build-out of Budg, aligning with all PRD requirements and best practices in modern web application development.
-

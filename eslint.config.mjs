@@ -5,7 +5,11 @@ export default [
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
   {
-    ignores: ['**/dist'],
+    ignores: [
+      '**/dist',
+      '**/node_modules/bs-logger/**',
+      '**/node_modules/ts-jest/**'
+    ],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
