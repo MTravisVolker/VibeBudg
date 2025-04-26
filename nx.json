@@ -44,7 +44,9 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["backend-e2e/**/*"]
+      "exclude": [
+        "backend-e2e/**/*"
+      ]
     },
     {
       "plugin": "@nx/webpack/plugin",
@@ -59,7 +61,9 @@
   ],
   "targetDefaults": {
     "e2e-ci--**/**": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     }
   },
   "generators": {

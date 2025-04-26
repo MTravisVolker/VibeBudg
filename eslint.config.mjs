@@ -10,6 +10,7 @@ export default [
       '**/node_modules/bs-logger/**',
       '**/node_modules/ts-jest/**'
     ],
+    ignorePatterns: ['node_modules/'],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
