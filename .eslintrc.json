@@ -12,7 +12,6 @@
     "node": true,
     "es2021": true
   },
-  "ignorePatterns": ["dist/", "build/", "node_modules/"],
   "rules": {
     // Add or override rules here
   }

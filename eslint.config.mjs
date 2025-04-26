@@ -8,9 +8,9 @@ export default [
     ignores: [
       '**/dist',
       '**/node_modules/bs-logger/**',
-      '**/node_modules/ts-jest/**'
+      '**/node_modules/ts-jest/**',
+      'node_modules/'
     ],
-    ignorePatterns: ['node_modules/'],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
