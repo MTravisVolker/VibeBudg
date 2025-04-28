@@ -1,0 +1,218 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String                  @id @default(uuid()) @db.Uuid
+  email                String                  @unique @db.VarChar(255)
+  hashed_password      String                  @db.VarChar(255)
+  is_active            Boolean                 @default(true)
+  is_superuser         Boolean                 @default(false)
+  is_verified          Boolean                 @default(false)
+  mfa_enabled          Boolean                 @default(false)
+  created_at           DateTime                @default(now()) @db.Timestamp(0)
+  updated_at           DateTime                @default(now()) @db.Timestamp(0)
+  apiTokens            Api_Token[]
+  oauthAccounts        OAuth_Account[]
+  billStatuses         Bill_Status[]
+  recurrences          Recurrence[]
+  categories           Category[]
+  bankAccounts         Bank_Account[]
+  bills                Bills[]
+  dueBills             Due_Bills[]
+  bankAccountInstances Bank_Account_Instance[]
+  auditLogs            Audit_Log[]
+}
+
+model Api_Token {
+  id         Int       @id @default(autoincrement())
+  user_id    String    @db.Uuid
+  token      String    @unique
+  issued_at  DateTime  @default(now()) @db.Timestamp(0)
+  expires_at DateTime? @db.Timestamp(0)
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model OAuth_Account {
+  id         Int      @id @default(autoincrement())
+  user_id    String   @db.Uuid
+  provider   String   @db.VarChar(50)
+  account_id String   @db.VarChar(255)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([provider, account_id])
+}
+
+model Bill_Status {
+  id                   Int                     @id @default(autoincrement()) @db.SmallInt
+  user_id              String                  @db.Uuid
+  name                 String                  @db.VarChar(100)
+  archived             Boolean                 @default(false)
+  highlight_color_hex  String?                 @db.VarChar(7)
+  user                 User                    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  dueBills             Due_Bills[]
+  bankAccountInstances Bank_Account_Instance[]
+
+  @@unique([user_id, name])
+  @@index([user_id])
+  @@index([name])
+}
+
+model Recurrence {
+  id           Int            @id @default(autoincrement()) @db.SmallInt
+  user_id      String         @db.Uuid
+  name         String         @db.VarChar(100)
+  calculation  String?        @db.VarChar(20)
+  archived     Boolean        @default(false)
+  user         User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  bankAccounts Bank_Account[]
+  dueBills     Due_Bills[]
+  Bills        Bills[]
+
+  @@unique([user_id, name])
+  @@index([user_id])
+  @@index([name])
+}
+
+model Category {
+  id       Int     @id @default(autoincrement()) @db.SmallInt
+  user_id  String  @db.Uuid
+  name     String  @db.VarChar(100)
+  archived Boolean @default(false)
+  user     User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  bills    Bills[]
+
+  @@unique([user_id, name])
+  @@index([user_id])
+  @@index([name])
+}
+
+model Bank_Account {
+  id                   Int                     @id @default(autoincrement()) @db.SmallInt
+  user_id              String                  @db.Uuid
+  name                 String                  @db.VarChar(100)
+  url                  String?                 @db.VarChar(100)
+  recurrence           Int?                    @db.SmallInt
+  recurrence_value     Int?
+  archived             Boolean                 @default(false)
+  font_color_hex       String                  @db.VarChar(7)
+  user                 User                    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  recurrenceModel      Recurrence?             @relation(fields: [recurrence], references: [id])
+  bills                Bills[]                 @relation("DefaultDraftAccount")
+  dueBills             Due_Bills[]             @relation("DraftAccount")
+  bankAccountInstances Bank_Account_Instance[]
+
+  @@unique([user_id, name])
+  @@index([user_id])
+  @@index([name])
+  @@index([recurrence])
+}
+
+model Bills {
+  id                    Int           @id @default(autoincrement()) @db.SmallInt
+  user_id               String        @db.Uuid
+  name                  String        @db.VarChar(100)
+  default_amount_due    Decimal       @db.Decimal(10, 2)
+  url                   String?       @db.VarChar(100)
+  archived              Boolean       @default(false)
+  default_draft_account Int?          @db.SmallInt
+  category              Int?          @db.SmallInt
+  recurrence            Int?          @db.SmallInt
+  recurrence_value      Int?
+  user                  User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  defaultDraftAccount   Bank_Account? @relation("DefaultDraftAccount", fields: [default_draft_account], references: [id])
+  categoryModel         Category?     @relation(fields: [category], references: [id])
+  recurrenceModel       Recurrence?   @relation(fields: [recurrence], references: [id])
+  dueBills              Due_Bills[]
+
+  @@unique([user_id, name])
+  @@index([user_id])
+  @@index([name])
+  @@index([default_draft_account])
+  @@index([category])
+}
+
+model Due_Bills {
+  id               Int           @id @default(autoincrement()) @db.SmallInt
+  user_id          String        @db.Uuid
+  bill             Int?          @db.SmallInt
+  recurrence       Int?          @db.SmallInt
+  recurrence_value Int?
+  priority         Int           @default(0)
+  due_date         DateTime      @db.Date
+  pay_date         DateTime?     @db.Date
+  min_amount_due   Decimal       @db.Decimal(10, 2)
+  total_amount_due Decimal       @db.Decimal(10, 2)
+  status           Int?          @db.SmallInt
+  archived         Boolean       @default(false)
+  confirmation     String?       @db.VarChar(100)
+  notes            String?
+  draft_account    Int?          @db.SmallInt
+  user             User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  billModel        Bills?        @relation(fields: [bill], references: [id])
+  recurrenceModel  Recurrence?   @relation(fields: [recurrence], references: [id])
+  statusModel      Bill_Status?  @relation(fields: [status], references: [id])
+  draftAccount     Bank_Account? @relation("DraftAccount", fields: [draft_account], references: [id])
+
+  @@index([user_id])
+  @@index([bill])
+  @@index([recurrence])
+  @@index([due_date])
+  @@index([pay_date])
+  @@index([status])
+  @@index([draft_account])
+  @@index([priority])
+}
+
+model Bank_Account_Instance {
+  id              Int           @id @default(autoincrement()) @db.SmallInt
+  user_id         String        @db.Uuid
+  bank_account    Int?          @db.SmallInt
+  priority        Int           @default(0)
+  due_date        DateTime      @db.Date
+  pay_date        DateTime?     @db.Date
+  status          Int?          @db.SmallInt
+  archived        Boolean       @default(false)
+  current_balance Decimal       @db.Decimal(10, 2)
+  user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  bankAccount     Bank_Account? @relation(fields: [bank_account], references: [id])
+  statusModel     Bill_Status?  @relation(fields: [status], references: [id])
+
+  @@index([user_id])
+  @@index([bank_account])
+  @@index([due_date])
+  @@index([pay_date])
+  @@index([status])
+  @@index([priority])
+}
+
+model Audit_Log {
+  id                  Int      @id @default(autoincrement())
+  user_id             String   @db.Uuid
+  table_name          String   @db.VarChar(50)
+  row_id              Int
+  field_name          String   @db.VarChar(100)
+  action              String   @db.VarChar(20)
+  value_before_change String?
+  value_after_change  String?
+  timestamp           DateTime @default(now()) @db.Timestamp(0)
+  user                User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([table_name])
+  @@index([row_id])
+  @@index([timestamp])
+}
