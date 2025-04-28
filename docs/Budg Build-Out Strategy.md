@@ -52,13 +52,13 @@ This document outlines a comprehensive, phased approach to building the Budg web
 ## Phase 2: Database & API Design
 
 1. **Data Modeling**
-   - [ ] Design ERD covering: Users, Bank Accounts, Bank Account Instances, Bills, Due Bills, Categories, Statuses, Recurrences, Audit Logs.
+   - [X] Design ERD covering: Users, Bank Accounts, Bank Account Instances, Bills, Due Bills, Categories, Statuses, Recurrences, Audit Logs.
      > **ChatGPT Prompt:** Draw an Entity Relationship Diagram (ERD) for the Budg app, including all major entities and their relationships.
-   - [ ] Define relationships (foreign keys, constraints).
+   - [X] Define relationships (foreign keys, constraints).
      > **ChatGPT Prompt:** List all foreign key relationships and constraints for the Budg database schema.
 
 2. **Database Schema Implementation**
-   - [ ] Implement schema migrations.
+   - [X] Implement schema migrations.
      > **ChatGPT Prompt:** Generate SQL migration scripts to create the Budg database schema based on the ERD.
    - [ ] Seed initial data for development/testing.
      > **ChatGPT Prompt:** Write SQL or ORM scripts to seed the Budg database with sample users, accounts, bills, categories, statuses, and recurrences.

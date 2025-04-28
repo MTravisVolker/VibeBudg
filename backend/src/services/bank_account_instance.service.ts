@@ -1,4 +1,4 @@
-import { PrismaClient, Bank_Account_Instance } from '../generated/prisma/client';
+import { PrismaClient, Bank_Account_Instance } from '@backend/generated/prisma/client';
 
 const prisma = new PrismaClient();
 

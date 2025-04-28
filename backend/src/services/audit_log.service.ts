@@ -1,4 +1,4 @@
-import { PrismaClient, Audit_Log } from '../generated/prisma/client';
+import { PrismaClient, Audit_Log } from '@backend/generated/prisma/client';
 
 const prisma = new PrismaClient();
 
